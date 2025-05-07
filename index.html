@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetsPaw</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="manifest" href="images/site.webmanifest">
+    <link rel="mask-icon" href="images/safari-pinned-tab.svg" color="#5bbad5">
+    
+    <meta name="title" content="PetsPaw - Your Pet Paradise">
+    <meta name="description" content="PetsPaw - Your one-stop destination for all things pets!">
+    <meta name="keywords" content="pets, pet care, pet supplies, pet adoption">
+</head>
+<body>
+    <section class="container">
+      <!-- Content left -->
+      <div class="content-left">
+        <div class="main-section">
+          <a href="#" class="logo" data-link>
+            <img src="images/logo.svg" alt="PetsPaw Logo" />
+            </a>
+          <div class="greeting">
+            <h1>Meow!</h1>
+            <p class="subtitle">Welcome to PetsPaw✌️</p>
+          </div>
+          <nav class="navigation">
+            <a href="voting" class="nav-card voting" data-link>
+              <img src="images/vote-table@1x.webp" srcset="images/vote-table@2x.webp 2x" alt="Voting" />
+              <span class="label">VOTING</span>
+            </a>
+            <a href="breeds" class="nav-card breeds" data-link>
+            <img src="images/pet-breeds@1x.webp" srcset="images/pet-breeds@2x.webp 2x" alt="Breeds" />
+            <span class="label">BREEDS</span>
+            </a>
+            <a href="gallery" class="nav-card gallery" data-link>
+            <img src="images/images-search@1x.webp" srcset="images/images-search@2x.webp 2x" alt="Gallery" />
+            <span class="label">GALLERY</span>
+            </a>
+          </nav>
+        </div>
+      </div> 
+        <img class="hero-image" src="images/girl-and-pet@1x.webp" alt="Girl and pet" />
+        <!-- Content right -->
+        <div class="content-right">
+          <div class="toolbar">
+            <div class="search-bar-wrapper">
+              <input type="text" class="search-bar" placeholder="Search for breeds by name" />
+              <button class="search-button">
+                <img src="images/search-20.svg" alt="Search" />
+              </button>
+            </div>
+            <div class="links-toolbar">
+              <a href="likes" class="link-saved likes" data-link>
+                <img src="images/like-30.svg" alt="Likes" />
+              </a>
+              <a href="favourites" class="link-saved favourites" data-link>
+                <img src="images/fav-30.svg" alt="Favourites" />
+              </a>
+              <a href="dislikes" class="link-saved dislikes" data-link>
+                <img src="images/dislike-30.svg" alt="Dislikes" />
+              </a>
+            </div>
+          </div>
+          <!-- Voting page -->
+          <div class="voting-page">
+            <nav class="breadcrumbs">
+              <button class="btn-back">
+                <img src="images/back-20.svg" alt="Back" />
+              </button>
+              <span class="breadcrumbs-item current">Voting</span>
+            </nav>
+            <div class="candidate-container">
+              <div class="vote-image-wrapper">
+                <img class="loader-page" src="images/loader-100.svg" alt="Loading" />
+                 <!-- <img class="candidate-image" src="images/candidate.webp" alt="Candidate" />-->
+              </div>
+              <div class="voting-buttons-container">
+                <button class="vote-button like" onClick="vote(1)">
+                  <img src="images/like-white-30.svg" alt="Like" />
+                </button>
+                <button class="vote-button favourite" onClick="vote(2)">
+                  <img src="images/fav-white-30.svg" alt="Favourite" />
+                </button>
+                <button class="vote-button dislike" onClick="vote(3)">
+                  <img src="images/dislike-white-30.svg" alt="Dislike" />
+                </button>
+              </div>
+            </div>
+            <div class="user-action-logs">
+              <div class="user-action">
+                <!-- Placeholder timestamp, replace dynamically if needed -->
+                <span class="timestamp">22:35</span>
+                <p class="action">Image ID: <span class="id-highlighted">fQSunHvl8</span> was added to Favourites</p>
+                <img class="action-icon" src="images/fav-20.svg" alt="Favourites" />
+              </div>
+            </div>
+          </div>
+          <!-- Breeds page -->
+          <div class="breeds-page">
+            <div class="tools">
+              <nav class="breadcrumbs">
+                <button class="btn-back">
+                  <img src="images/back-20.svg" alt="Back" />
+                </button>
+                <span class="breadcrumbs-item page-item current">Breeds</span>
+                <span class="breadcrumbs-item id-item current">ID</span>
+              </nav>
+              <div class="filters-and-sort">
+                <div class="dropdown-wrapper">
+                  <select class="dropdown" id="breeds-dropdown" alt="Breeds">
+                  </select>
+                  <img src="images/dropdown-12.svg" alt="Dropdown Arrow" />
+                </div>
+                <div class="dropdown-wrapper">
+                  <select class="dropdown" id="limit-dropdown">
+                    <option value="5" selected>Limit: 5</option>
+                    <option value="10">Limit: 10</option>
+                    <option value="15">Limit: 15</option>
+                    <option value="20">Limit: 20</option>
+                  </select>
+                  <img src="images/dropdown-12.svg" alt="Dropdown Arrow" />
+                </div>
+                <button class="order a-z active">
+                  <img src="images/sort-revert-color-20.svg" />
+                </button>
+                <button class="order z-a">
+                  <img src="images/sort-color-20.svg" />
+                </button>
+              </div>
+            </div>
+            <!-- Grid -->
+            <div class="grid-wrapper">
+              <img class="loader-page" src="images/loader-100.svg" alt="Loading" />
+              <div class="grid grid-breeds">
+                <!-- <a href="breed-page" class="grid-cell breed-card" data-link>
+                  <span class="breed-name">Breed Name</span>
+                </a> -->
+              </div>
+              <div class="pagination">
+                <button class="page-button prev">
+                  <img src="images/back-20.svg" alt="Previous Page" />
+                  Prev
+                </button>
+                <button class="page-button next">
+                  Next
+                  <img src="images/forward-20.svg" alt="Next Page" />
+                </button>
+              </div>
+            </div>
+            <!-- Breed-info page -->
+            <div class="breed-info-page">
+              <!-- <div class="carousel">
+                <img src="images/candidate.webp" alt="Breed picture" />
+                <div class="dots"></div>
+              </div> -->
+              <img class="breed-page-img" src="images/candidate.webp" alt="Breed picture" />
+              <div class="breed-description">
+                <h2 class="breed-title">Basenji</h2>
+                <p class="subtitle">Family companion cat</p>
+                <div class="breed-details">
+                  <div class="details temperament">
+                    <h4>Temperament</h4>
+                    <p>Active, Energetic, Independent, Intelligent, Gentle</p>
+                  </div>
+                  <div class="details other">
+                      <div class="detail origin">
+                        <h4>Origin:</h4>
+                        <p>United States</p>
+                      </div>
+                      <div class="detail weight">
+                        <h4>Weight:</h4>
+                        <p>3 - 5 kgs</p>
+                      </div>
+                      <div class="detail lifespan">
+                        <h4>Lifespan:</h4>
+                        <p>14 - 15 years</p>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Gallery page -->
+          <div class="gallery-page">
+            <div class="tools tools-gallery">
+              <nav class="breadcrumbs">
+                <button class="btn-back">
+                  <img src="images/back-20.svg" alt="Back" />
+                </button>
+                <span class="breadcrumbs-item current">Gallery</span>
+              </nav>
+              <button href="upload" class="btn-upload" datalink>
+                <img src="images/upload-16.svg" alt="Upload" />
+                Upload
+              </button>
+            </div>
+            <div class="filters-gallery">
+                <div class="dropdown-wrapper-labeled">
+                  <span class="label-dropdown">ORDER</span>
+                  <div class="dropdown-wrapper">
+                    <select class="dropdown dropdown-light" id="breeds" alt="Breeds">
+                      <option value="all">Random</option>
+                    </select>
+                    <img class="icon-dropdown" src="images/dropdown-12.svg" alt="Dropdown Arrow" />
+                  </div>
+                </div>
+              <div class="dropdown-wrapper-labeled">
+                <span class="label-dropdown">TYPE</span>
+                <div class="dropdown-wrapper">
+                  <select class="dropdown dropdown-light" id="breeds" alt="Breeds">
+                    <option value="all">Static</option>
+                  </select>
+                  <img class="icon-dropdown" src="images/dropdown-12.svg" alt="Dropdown Arrow" />
+                </div>
+              </div>
+              <div class="dropdown-wrapper-labeled">
+                <span class="label-dropdown">BREED</span>
+                <div class="dropdown-wrapper">
+                  <select class="dropdown dropdown-light" id="breeds" alt="Breeds">
+                    <option value="all">None</option>
+                  </select>
+                  <img class="icon-dropdown" src="images/dropdown-12.svg" alt="Dropdown Arrow" />
+                </div>
+              </div>
+              <div class="dropdown-wrapper-labeled">
+                <span class="label-dropdown">LIMIT</span>
+                <div class="dropdown-and-reload">
+                  <div class="dropdown-wrapper with-reload">
+                    <select class="dropdown dropdown-light" id="breeds" alt="Breeds">
+                      <option value="all">5 items per page</option>
+                    </select>
+                    <img class="icon-dropdown" class="icon-dropdown" src="images/dropdown-12.svg" alt="Dropdown Arrow" />
+                  </div>
+                  <button class="btn-reload">
+                    <img src="images/update-20.svg" alt="Reload" />
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="grid-wrapper">
+              <div class="grid">
+                <div class="grid-cell gallery-card">
+                  <button class="btn-gallery-fav">
+                    <img src="images/fav-20.svg" alt="Favourites" />
+                  </button>
+                </div>
+              </div>
+              <div class="pagination">
+                <button class="page-button prev disabled">
+                  <img src="images/back-20.svg" alt="Previous Page" />
+                  Prev
+                </button>
+                <button class="page-button next">
+                  Next
+                  <img src="images/forward-20.svg" alt="Next Page" />
+                </button>
+              </div>
+            </div>
+            <!-- Upload popup -->
+            <div class="upload-wrapper">
+              <div class="upload-popup">
+                <button class="btn-close">
+                  <img src="images/close-20.svg" alt="Close" />
+                </button>
+                <div class="upload-header">
+                  <h2>Upload a .jpg or .png Cat Image</h2>
+                  <p class="subtitle">Any uploads must comply with the <a href="https://thecatapi.com/privacy" class="link-text">upload guidelines</a> or face deletion.</p>
+                </div>
+                <div class="upload-area">
+                  <p class="subtitle"><b>Drag here</b> your file or <b>Click here</b> to upload</p>
+                  <img class="uploaded-image" src="images/candidate.webp" alt="Uploaded image" />
+                </div>
+                <p class="image-file-name subtitle">No file selected</p>
+                <button class="btn-upload-file">
+                  <img src="images/loading-white-16.svg" alt="Upload" />
+                  UPLOAD PHOTO
+                </button>
+                <div class="upload-message success">
+                  <img src="images/success-20.svg" alt="Success" />
+                  <p>Thanks for the Upload - Cat found!</p>
+                </div>
+                <div class="upload-message error">
+                  <img src="images/error-20.svg" alt="Error" />
+                  <p>No Cat found - try a different one</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Search result page -->
+          <div class="search-result-page">
+            <nav class="breadcrumbs">
+              <button class="btn-back">
+                <img src="images/back-20.svg" alt="Back" />
+              </button>
+              <span class="breadcrumbs-item current">Search</span>
+            </nav>
+            <img class="loader-page" src="images/loader-100.svg" alt="Loading" />
+            <p class="subtitle">Search results for: <span class="subtitle bold">"Breed name"</span></p>
+            <p class="nothing-found-message">No item found</p>
+            <div class="grid">
+              <a href="breed-page" class="grid-cell dislikes-card breed-card" data-link>
+                <span class="breed-name">Breed Name</span>
+              </a>
+            </div>
+        </div>
+        <!-- Likes page -->
+        <div class="likes-page">
+          <nav class="breadcrumbs">
+            <button class="btn-back">
+              <img src="images/back-20.svg" alt="Back" />
+            </button>
+            <span class="breadcrumbs-item current">Likes</span>
+          </nav>
+          <img class="loader-page" src="images/loader-100.svg" alt="Loading" />
+          <p class="nothing-found-message">No item found</p>
+          <div class="grid grid-likes">
+            <!-- <div class="grid-cell likes-card likes-card"></div> -->
+          </div>
+          <div class="user-action-logs">
+            <div class="user-action">
+              <!-- Placeholder timestamp, replace dynamically if needed -->
+              <span class="timestamp">22:35</span>
+              <p class="action">Image ID: <span class="id-highlighted">fQSunHvl8</span> was added to Favourites</p>
+              <img class="action-icon" src="images/fav-20.svg" alt="Favourites" />
+            </div>
+          </div>
+        </div>
+        <!-- Favourites page -->
+        <div class="favourites-page">
+          <nav class="breadcrumbs">
+            <button class="btn-back">
+              <img src="images/back-20.svg" alt="Back" />
+            </button>
+            <span class="breadcrumbs-item current">Favourites</span>
+          </nav>
+          <img class="loader-page" src="images/loader-100.svg" alt="Loading" />
+          <p class="nothing-found-message">No item found</p>
+          <div class="grid grid-favourites">
+            <!-- <div class="grid-cell gallery-card">
+              <button class="btn-gallery-fav">
+                <img src="images/fav-20.svg" alt="Favourites" />
+              </button>
+            </div>-->
+          </div>
+          <div class="user-action-logs">
+            <div class="user-action">
+              <!-- Placeholder timestamp, replace dynamically if needed -->
+              <span class="timestamp">22:35</span>
+              <p class="action">Image ID: <span class="id-highlighted">fQSunHvl8</span> was added to Favourites</p>
+              <img class="action-icon" src="images/fav-20.svg" alt="Favourites" />
+            </div>
+          </div>
+        </div>
+        <!-- Dislikes page -->
+        <div class="dislikes-page">
+          <nav class="breadcrumbs">
+            <button class="btn-back">
+              <img src="images/back-20.svg" alt="Back" />
+            </button>
+            <span class="breadcrumbs-item current">Dislikes</span>
+          </nav>
+          <img class="loader-page" src="images/loader-100.svg" alt="Loading" />
+          <p class="nothing-found-message">No item found</p>
+          <div class="grid grid-dislikes">
+            <!-- <div class="grid-cell dislikes-card"></div> -->
+          </div>
+          <div class="user-action-logs">
+            <div class="user-action">
+              <!-- Placeholder timestamp, replace dynamically if needed -->
+              <span class="timestamp">22:35</span>
+              <p class="action">Image ID: <span class="id-highlighted">fQSunHvl8</span> was added to Favourites</p>
+              <img class="action-icon" src="images/fav-20.svg" alt="Favourites" />
+            </div>
+          </div>
+        </div>
+    </section>
+</body>
+</html>
