@@ -83,24 +83,23 @@
                  <!-- <img class="candidate-image" src="images/candidate.webp" alt="Candidate" />-->
               </div>
               <div class="voting-buttons-container">
-                <button class="vote-button like" onClick="vote(1)">
+                <button class="vote-button like">
                   <img src="images/like-white-30.svg" alt="Like" />
                 </button>
-                <button class="vote-button favourite" onClick="vote(2)">
+                <button class="vote-button favourite">
                   <img src="images/fav-white-30.svg" alt="Favourite" />
                 </button>
-                <button class="vote-button dislike" onClick="vote(3)">
+                <button class="vote-button dislike">
                   <img src="images/dislike-white-30.svg" alt="Dislike" />
                 </button>
               </div>
             </div>
             <div class="user-action-logs">
-              <div class="user-action">
-                <!-- Placeholder timestamp, replace dynamically if needed -->
+              <!--<div class="user-action">
                 <span class="timestamp">22:35</span>
                 <p class="action">Image ID: <span class="id-highlighted">fQSunHvl8</span> was added to Favourites</p>
                 <img class="action-icon" src="images/fav-20.svg" alt="Favourites" />
-              </div>
+              </div>-->
             </div>
           </div>
           <!-- Breeds page -->
@@ -157,6 +156,7 @@
             </div>
             <!-- Breed-info page -->
             <div class="breed-info-page">
+              <img class="loader-page" src="images/loader-100.svg" alt="Loading" />
               <!-- <div class="carousel">
                 <img src="images/candidate.webp" alt="Breed picture" />
                 <div class="dots"></div>
@@ -164,7 +164,6 @@
               <img class="breed-page-img" src="images/candidate.webp" alt="Breed picture" />
               <div class="breed-description">
                 <h2 class="breed-title">Basenji</h2>
-                <p class="subtitle">Family companion cat</p>
                 <div class="breed-details">
                   <div class="details temperament">
                     <h4>Temperament</h4>
@@ -321,17 +320,8 @@
           </nav>
           <img class="loader-page" src="images/loader-100.svg" alt="Loading" />
           <p class="nothing-found-message">No item found</p>
-          <div class="grid grid-likes">
-            <!-- <div class="grid-cell likes-card likes-card"></div> -->
-          </div>
-          <div class="user-action-logs">
-            <div class="user-action">
-              <!-- Placeholder timestamp, replace dynamically if needed -->
-              <span class="timestamp">22:35</span>
-              <p class="action">Image ID: <span class="id-highlighted">fQSunHvl8</span> was added to Favourites</p>
-              <img class="action-icon" src="images/fav-20.svg" alt="Favourites" />
-            </div>
-          </div>
+          <div class="grid grid-likes"></div>
+          <div class="user-action-logs"></div>
         </div>
         <!-- Favourites page -->
         <div class="favourites-page">
@@ -350,14 +340,7 @@
               </button>
             </div>-->
           </div>
-          <div class="user-action-logs">
-            <div class="user-action">
-              <!-- Placeholder timestamp, replace dynamically if needed -->
-              <span class="timestamp">22:35</span>
-              <p class="action">Image ID: <span class="id-highlighted">fQSunHvl8</span> was added to Favourites</p>
-              <img class="action-icon" src="images/fav-20.svg" alt="Favourites" />
-            </div>
-          </div>
+          <div class="user-action-logs"></div>
         </div>
         <!-- Dislikes page -->
         <div class="dislikes-page">
@@ -369,17 +352,8 @@
           </nav>
           <img class="loader-page" src="images/loader-100.svg" alt="Loading" />
           <p class="nothing-found-message">No item found</p>
-          <div class="grid grid-dislikes">
-            <!-- <div class="grid-cell dislikes-card"></div> -->
-          </div>
-          <div class="user-action-logs">
-            <div class="user-action">
-              <!-- Placeholder timestamp, replace dynamically if needed -->
-              <span class="timestamp">22:35</span>
-              <p class="action">Image ID: <span class="id-highlighted">fQSunHvl8</span> was added to Favourites</p>
-              <img class="action-icon" src="images/fav-20.svg" alt="Favourites" />
-            </div>
-          </div>
+          <div class="grid grid-dislikes"></div>
+          <div class="user-action-logs"></div>
         </div>
     </section>
 </body>

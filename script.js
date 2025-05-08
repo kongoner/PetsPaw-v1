@@ -204,7 +204,7 @@ function goToDislikesPage() {
 function goToBreedInfoPage() {
     contentRight.style.display = 'flex';
     gridWrapper.style.display = 'none';
-    breedInfoPage.style.display = 'block';
+    breedInfoPage.style.display = 'flex';
     filtersAndSortContainer.style.display = 'none';
     idItem.style.display = 'block';
     pageItem.classList.remove('current');
@@ -228,23 +228,28 @@ function goToBreedInfoPage() {
 votingPageCard.addEventListener('click', () => {
     goToVotingPage();
     fetchRandomCat();
+    getUserLogs();
     });
 breedsPageCard.addEventListener('click', goToBreedsPage);
 galleryPageCard.addEventListener('click', goToGalleryPage);
 
-// Toolbar links funkctionality
+// Toolbar links functionality
 likesPageLink.addEventListener('click', () => {
-     goToLikesPage();
-     getLikes();
-    });
+    goToLikesPage();
+    getLikes();
+    getUserLogs();
+});
+
 favouritesPageLink.addEventListener('click', () => {
     goToFavouritesPage();
     getFavourites();
+    getUserLogs();
 });
 
 dislikesPageLink.addEventListener('click', () => {
     goToDislikesPage();
     getDislikes();
+    getUserLogs();
 });
 
 
@@ -383,6 +388,85 @@ async function vote(value) {
     }
 }
 
+// Handling vote buttons
+const voteButtonLike = document.querySelector('.vote-button.like');
+const voteButtonFavourite = document.querySelector('.vote-button.favourite');
+const voteButtonDislike = document.querySelector('.vote-button.dislike');
+
+voteButtonLike.addEventListener('click', async () => {
+    await vote(1);
+    await getUserLogs();
+});
+voteButtonFavourite.addEventListener('click', async () => {
+    await vote(2);
+    await getUserLogs();
+});
+voteButtonDislike.addEventListener('click', async () => {
+    await vote(3);
+    await getUserLogs();
+});
+
+// Get user logs
+async function getUserLogs() {
+    try {
+        const response = await fetch(GET_VOTES_URL, {
+            headers: {
+                'x-api-key': API_KEY
+            }
+        });
+
+        const data = await response.json();
+
+        // Clear existing logs to avoid duplicates
+        userLogsWrapper.innerHTML = '';
+
+        // Add only the last 5 logs
+        const recentLogs = data.slice(-5);
+        recentLogs.forEach(vote => {
+            createUserLog(vote);
+        });
+    } catch (error) {
+        console.error(`Error fetching user logs: ${error.message}`, error);
+    }
+}
+
+// Helper function to create user log element
+const userLogsWrapper = document.querySelector('.user-action-logs');
+
+function createUserLog(vote) {
+    let userLogDiv = document.createElement('div');
+    userLogDiv.classList.add('user-action');
+
+    let timeStamp = document.createElement('span');
+    timeStamp.classList.add('timestamp');
+    timeStamp.textContent = `${vote.created_at.slice(11, 16)}`;
+
+    let logMessage = document.createElement('p');
+    logMessage.classList.add('action');
+    if (vote.value === VOTE_LIKE) {
+        logMessage.innerHTML = `Image ID: <span class="id-highlighted">${vote.image_id}</span> was added to Likes`;
+    } else if (vote.value === VOTE_FAVOURITE) {
+        logMessage.innerHTML = `Image ID: <span class="id-highlighted">${vote.image_id}</span> was added to Favourites`;
+    } else if (vote.value === VOTE_DISLIKE) {
+        logMessage.innerHTML = `Image ID: <span class="id-highlighted">${vote.image_id}</span> was added to Dislikes`;
+    }
+
+    let logIcon = document.createElement('img');
+    logIcon.classList.add('action-icon');
+    if (vote.value === VOTE_LIKE) {
+        logIcon.src = 'images/like-color-20.svg';
+    } else if (vote.value === VOTE_FAVOURITE) {
+        logIcon.src = 'images/fav-20.svg';
+    } else if (vote.value === VOTE_DISLIKE) {
+        logIcon.src = 'images/dislike-color-20.svg';
+    }
+
+    userLogDiv.append(timeStamp);
+    userLogDiv.append(logMessage);
+    userLogDiv.append(logIcon);
+    userLogsWrapper.prepend(userLogDiv);
+}
+
 // Add votings to Likes, Favourites and Dislikes
 const GET_VOTES_URL = 'https://api.thecatapi.com/v1/votes?limit=100';
 const likesGrid = document.querySelector(".grid.grid-likes");
@@ -415,7 +499,7 @@ async function getVotesByType(voteType, grid) {
             loader.style.display = 'block';
         });
 
-        const response = await fetch(`${GET_VOTES_URL}&value=${voteType}`, {
+        const response = await fetch(GET_VOTES_URL, {
             headers: {
                 'x-api-key': API_KEY
             }
@@ -427,19 +511,16 @@ async function getVotesByType(voteType, grid) {
         grid.innerHTML = '';
 
         // Filter votes by type and iterate over them
-        data.filter(vote => vote.value === voteType)
-            .forEach(vote => {
-                if (voteType === VOTE_FAVOURITE) {
-                    createFavouritesCell(vote.image.url, grid);
-                } else {
-                    createImageCell(vote.image.url, grid);
-                }
-            });
+        let sortedData = data.filter(vote => vote.value === voteType);
 
-        if (data.length === 0) {
-            nothingFoundMessage.style.display = 'block';
+        sortedData.forEach(vote => {
+            createImageCell(vote.image.url, grid);
+        });
+
+        if (sortedData.length === 0) {
+        nothingFoundMessage.style.display = 'block';
         } else {
-            nothingFoundMessage.style.display = 'none';
+        nothingFoundMessage.style.display = 'none';
         }
     } catch (error) {
         console.error(`Error fetching votes for voteType "${voteType}": ${error.message}`, error);
@@ -458,6 +539,8 @@ function createImageCell(imageUrl, grid) {
     grid.append(imageCell);
 }
 
+// Bact to this later
+/*
 function createFavouritesCell(imageUrl, grid) {
     const favCell = document.createElement('div');
     favCell.classList.add('grid-cell gallery-card');
@@ -472,7 +555,7 @@ function createFavouritesCell(imageUrl, grid) {
     favIcon.src = 'images/fav-20.svg';
     favButton.append(favIcon);
 }
-
+*/
 
 ////////////////////////////////////////////////////////////////////
 
@@ -669,7 +752,17 @@ function setupBreedCardListeners() {
 // Load breed info page
 async function loadBreedInfoPage(breedId) {
     try {
-        showLoader(true);
+        const breedInfoPage = document.querySelector('.breed-info-page');
+        const loader = breedInfoPage.querySelector('.loader-page');
+        const childElements = Array.from(breedInfoPage.children);
+
+        // Show only the loader
+        childElements.forEach(child => {
+            if (child !== loader) {
+                child.style.display = 'none';
+            }
+        });
+        loader.style.display = 'block';
 
         // Find the breed data from the already fetched list
         const allBreeds = await fetchBreeds(100, 0, 'ASC'); // Fetch all breeds
@@ -688,7 +781,17 @@ async function loadBreedInfoPage(breedId) {
         console.error(`Error loading breed info page for breed ID "${breedId}":`, error);
         alert(`Failed to load breed details for breed ID "${breedId}". Please try again later.`);
     } finally {
-        showLoader(false);
+        const breedInfoPage = document.querySelector('.breed-info-page');
+        const loader = breedInfoPage.querySelector('.loader-page');
+        const childElements = Array.from(breedInfoPage.children);
+
+        // Hide loader and show all other child elements
+        loader.style.display = 'none';
+        childElements.forEach(child => {
+            if (child !== loader) {
+                child.style.display = '';
+            }
+        });
     }
 }
 
@@ -701,7 +804,6 @@ function renderBreedInfoPage(breed) {
     idItem.textContent = breed.id;
     breedInfoPage.querySelector('.breed-page-img').src = breed.image?.url || 'placeholder.jpg';
     breedInfoPage.querySelector('.breed-title').textContent = breed.name || 'Unknown';
-    breedInfoPage.querySelector('.subtitle').textContent = 'Family companion cat';
     breedInfoPage.querySelector('.details.temperament p').textContent = breed.temperament || 'Unknown';
     breedInfoPage.querySelector('.detail.origin p').textContent = breed.origin || 'Unknown';
     breedInfoPage.querySelector('.detail.weight p').textContent = breed.weight?.metric || 'Unknown';
