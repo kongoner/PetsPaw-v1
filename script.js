@@ -125,6 +125,68 @@ function goToGalleryPage() {
     });
 }
 
+// Search result page
+const searchInput = document.querySelector('.search-bar');
+const searchPage = document.querySelector('.search-result-page');
+const searchButton = document.querySelector('.search-button');
+const searchGrid = document.querySelector('.grid.search-grid');
+
+function goToSearchPage() {
+    heroImage.style.display = 'none';
+    contentRight.style.display = 'flex';
+    searchPage.style.display = 'flex';
+
+    // Make links and navCards default
+    const links = toolbarLinksParent.querySelectorAll(':scope > a');
+    links.forEach(link => {
+        link.classList.remove('current');
+    });
+    const allCards = mainNavigation.querySelectorAll(':scope > a');
+    allCards.forEach(card => card.classList.remove('current'));
+
+    // Hide other pages
+    const allPages = contentRight.querySelectorAll(':scope > *:not(.toolbar)');
+    allPages.forEach(page => {
+        if (page !== searchPage) {
+            page.style.display = 'none';
+        }
+    });
+}
+
+searchButton.addEventListener('click', () => {
+    if (searchInput.value.trim() === '') {
+        alert('Please enter a search term.');
+        return;
+    }
+    goToSearchPage();
+    showSearchResults();
+})
+
+// Showing search results
+async function showSearchResults(grid) {
+    const allBreeds = await fetchBreeds(100, 0, 'ASC'); // Fetch all breeds for search filtering
+    searchGrid.innerHTML = ''; // Clear existing options
+
+    const nothingFoundMessage = searchPage.querySelector('.nothing-found-message');
+
+    const currentValue = searchInput.value.toLowerCase();
+    const resultMessage = document.createElement('p');
+    resultMessage.className = 'subtitle';
+    resultMessage.innerHTML = `Search results for: <span class="subtitle bold">"${currentValue}"</span>`
+    nothingFoundMessage.before(resultMessage);
+
+    allBreeds.forEach(breed => {
+        if (breed.name.toLowerCase().includes(currentValue)) {
+            const breedCard = createBreedCard(breed);
+            searchGrid.appendChild(breedCard);
+        } else {
+            // Show nothing found message for each page
+            nothingFoundMessage.style.display = 'block';
+        }
+    });
+
+}
+
 // Likes page
 const likesPage = document.querySelector('.likes-page');
 
@@ -261,6 +323,7 @@ let routes = {
     'breeds': goToBreedsPage,
     'gallery': goToGalleryPage,
     'likes': goToLikesPage,
+    'search': goToSearchPage,
     'favourites': goToFavouritesPage,
     'dislikes': goToDislikesPage,
     'breed-info': goToBreedInfoPage,
@@ -816,7 +879,7 @@ function renderBreedInfoPage(breed) {
 
 
 // Helper
-// Delete all user votes
+// Delete all user votes!!!
 async function deleteAllVotes() {
     try {
         const response = await fetch(GET_VOTES_URL, {
