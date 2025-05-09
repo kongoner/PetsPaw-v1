@@ -237,19 +237,19 @@ galleryPageCard.addEventListener('click', goToGalleryPage);
 likesPageLink.addEventListener('click', () => {
     goToLikesPage();
     getLikes();
-    getUserLogs();
+    // getUserLogs(); // Not working. Back to this later
 });
 
 favouritesPageLink.addEventListener('click', () => {
     goToFavouritesPage();
     getFavourites();
-    getUserLogs();
+    // getUserLogs(); // Not working. Back to this later
 });
 
 dislikesPageLink.addEventListener('click', () => {
     goToDislikesPage();
     getDislikes();
-    getUserLogs();
+    // getUserLogs(); // Not working. Back to this later
 });
 
 
@@ -511,17 +511,22 @@ async function getVotesByType(voteType, grid) {
         grid.innerHTML = '';
 
         // Filter votes by type and iterate over them
-        let sortedData = data.filter(vote => vote.value === voteType);
+        const filteredVotes = data.filter(vote => vote.value === voteType);
 
-        sortedData.forEach(vote => {
+        // Show nothing found message for each page
+        const page = grid.closest('.likes-page, .favourites-page, .dislikes-page');
+        const message = page?.querySelector('.nothing-found-message');
+
+        if (filteredVotes.length === 0) {
+            message.style.display = 'block';
+        } else {
+            message.style.display = 'none';
+        }
+
+        filteredVotes.forEach(vote => {
             createImageCell(vote.image.url, grid);
         });
 
-        if (sortedData.length === 0) {
-        nothingFoundMessage.style.display = 'block';
-        } else {
-        nothingFoundMessage.style.display = 'none';
-        }
     } catch (error) {
         console.error(`Error fetching votes for voteType "${voteType}": ${error.message}`, error);
     } finally {
@@ -531,31 +536,25 @@ async function getVotesByType(voteType, grid) {
     }
 }
 
-// Create grid cells
+// Create grid cell
 function createImageCell(imageUrl, grid) {
     const imageCell = document.createElement('div');
-    imageCell.classList.add('grid-cell');
+
+    if (grid === favouritesGrid) {
+        imageCell.className = 'grid-cell gallery-card';
+        const favButton = document.createElement('button');
+        favButton.classList.add('btn-gallery-fav');
+        const favIcon = document.createElement('img');
+        favIcon.src = 'images/fav-20.svg';
+        favButton.append(favIcon);
+        imageCell.append(favButton);
+    } else {
+        imageCell.className = 'grid-cell';
+    }
+
     imageCell.style.backgroundImage = `url("${imageUrl}")`;
     grid.append(imageCell);
 }
-
-// Bact to this later
-/*
-function createFavouritesCell(imageUrl, grid) {
-    const favCell = document.createElement('div');
-    favCell.classList.add('grid-cell gallery-card');
-    favCell.style.backgroundImage = `url("${imageUrl}")`;
-    grid.append(favCell);
-
-    const favButton = document.createElement('button');
-    favButton.classList.add('btn-gallery-fav');
-    favCell.append(favButton);
-
-    const favIcon = document.createElement('img');
-    favIcon.src = 'images/fav-20.svg';
-    favButton.append(favIcon);
-}
-*/
 
 ////////////////////////////////////////////////////////////////////
 
@@ -812,4 +811,36 @@ function renderBreedInfoPage(breed) {
     // Hide grid-wrapper and show breed-info-page
     gridWrapper.style.display = 'none';
     breedInfoPage.style.display = 'block';
+}
+
+
+
+// Helper
+// Delete all user votes
+async function deleteAllVotes() {
+    try {
+        const response = await fetch(GET_VOTES_URL, {
+            headers: {
+                'x-api-key': API_KEY
+            }
+        });
+
+        const votes = await response.json();
+
+        // Delete each vote
+        for (const vote of votes) {
+            await fetch(`${VOTES_URL}/${vote.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'x-api-key': API_KEY
+                }
+            });
+        }
+
+        alert('All votes have been deleted.');
+        getUserLogs(); // Refresh user logs
+    } catch (error) {
+        console.error('Error deleting votes:', error);
+        alert('Failed to delete votes. Please try again later.');
+    }
 }
