@@ -912,7 +912,7 @@ h4 {
 
 .upload-area {
   width: 100%;
-  min-height: 320px;
+  height: 320px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -930,14 +930,21 @@ h4 {
 .upload-area p {
   display: block;
 }
-.upload-area img {
-  display: none;
-  width: 100%;
-  border-radius: 10px;
+.upload-area.active {
+  background-color: rgba(251, 224, 220, 0.4);
+  border: 2px dashed #FF868E;
 }
 .upload-area.error-area {
   background-color: #FFDBDD;
   border: 2px dashed #FF868E;
+}
+
+.uploaded-image {
+  display: none;
+  height: 100%;
+  border-radius: 10px;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 
 .btn-upload-file {
@@ -979,8 +986,7 @@ h4 {
   color: white;
 }
 .btn-upload-file.disabled {
-  background-color: #F8F8F7;
-  color: #8C8C8C;
+  background-color: #D5D5D5;
   cursor: not-allowed;
   pointer-events: none;
 }

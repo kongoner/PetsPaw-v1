@@ -196,17 +196,20 @@
                 </button>
                 <span class="breadcrumbs-item current">Gallery</span>
               </nav>
-              <button href="upload" class="btn-upload" datalink>
+              <button class="btn-upload" datalink>
                 <img src="images/upload-16.svg" alt="Upload" />
                 Upload
               </button>
             </div>
+            <!-- Filters and sort -->
             <div class="filters-gallery">
                 <div class="dropdown-wrapper-labeled">
                   <span class="label-dropdown">ORDER</span>
                   <div class="dropdown-wrapper">
-                    <select class="dropdown dropdown-light" id="breeds" alt="Breeds">
-                      <option value="all">Random</option>
+                    <select class="dropdown dropdown-light" id="order-gal" alt="Order">
+                      <option value="RANDOM">Random</option>
+                      <option value="ASC">Ascending</option>
+                      <option value="DESC">Descending</option>
                     </select>
                     <img class="icon-dropdown" src="images/dropdown-12.svg" alt="Dropdown Arrow" />
                   </div>
@@ -214,8 +217,9 @@
               <div class="dropdown-wrapper-labeled">
                 <span class="label-dropdown">TYPE</span>
                 <div class="dropdown-wrapper">
-                  <select class="dropdown dropdown-light" id="breeds" alt="Breeds">
-                    <option value="all">Static</option>
+                  <select class="dropdown dropdown-light" id="image-type-gal" alt="Image type">
+                    <option value="jpg,png">Static</option>
+                    <option value="gif">Animated</option>
                   </select>
                   <img class="icon-dropdown" src="images/dropdown-12.svg" alt="Dropdown Arrow" />
                 </div>
@@ -223,8 +227,8 @@
               <div class="dropdown-wrapper-labeled">
                 <span class="label-dropdown">BREED</span>
                 <div class="dropdown-wrapper">
-                  <select class="dropdown dropdown-light" id="breeds" alt="Breeds">
-                    <option value="all">None</option>
+                  <select class="dropdown dropdown-light" id="breed-gal" alt="Breed">
+                    <option value="none">None</option>
                   </select>
                   <img class="icon-dropdown" src="images/dropdown-12.svg" alt="Dropdown Arrow" />
                 </div>
@@ -233,8 +237,11 @@
                 <span class="label-dropdown">LIMIT</span>
                 <div class="dropdown-and-reload">
                   <div class="dropdown-wrapper with-reload">
-                    <select class="dropdown dropdown-light" id="breeds" alt="Breeds">
-                      <option value="all">5 items per page</option>
+                    <select class="dropdown dropdown-light" id="limit-gal" alt="Limit">
+                      <option value="5">5 items per page</option>
+                      <option value="10">10 items per page</option>
+                      <option value="15">15 items per page</option>
+                      <option value="20">20 items per page</option>
                     </select>
                     <img class="icon-dropdown" class="icon-dropdown" src="images/dropdown-12.svg" alt="Dropdown Arrow" />
                   </div>
@@ -244,16 +251,12 @@
                 </div>
               </div>
             </div>
+            <img class="loader-page" src="images/loader-100.svg" alt="Loading" />
+            <!-- Grid -->
             <div class="grid-wrapper">
-              <div class="grid">
-                <div class="grid-cell gallery-card">
-                  <button class="btn-gallery-fav">
-                    <img src="images/fav-20.svg" alt="Favourites" />
-                  </button>
-                </div>
-              </div>
+              <div class="grid grid-gallery"></div>
               <div class="pagination">
-                <button class="page-button prev disabled">
+                <button class="page-button prev">
                   <img src="images/back-20.svg" alt="Previous Page" />
                   Prev
                 </button>
@@ -273,12 +276,13 @@
                   <h2>Upload a .jpg or .png Cat Image</h2>
                   <p class="subtitle">Any uploads must comply with the <a href="https://thecatapi.com/privacy" class="link-text">upload guidelines</a> or face deletion.</p>
                 </div>
-                <div class="upload-area">
+                <label for="input-file" class="upload-area">
+                  <input type="file" id="input-file" accept=".jpg, .jpeg, .png, .webp" hidden/>
                   <p class="subtitle"><b>Drag here</b> your file or <b>Click here</b> to upload</p>
                   <img class="uploaded-image" src="images/candidate.webp" alt="Uploaded image" />
-                </div>
+                </label>
                 <p class="image-file-name subtitle">No file selected</p>
-                <button class="btn-upload-file">
+                <button class="btn-upload-file disabled">
                   <img src="images/loading-white-16.svg" alt="Upload" />
                   UPLOAD PHOTO
                 </button>
@@ -301,6 +305,7 @@
               </button>
               <span class="breadcrumbs-item current">Search</span>
             </nav>
+            <p class="subtitle">Search results for: <span class="subtitle bold"></span></p>
             <img class="loader-page" src="images/loader-100.svg" alt="Loading" />
             <p class="nothing-found-message">No item found</p>
             <div class="grid search-grid">

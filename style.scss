@@ -1010,7 +1010,7 @@ h4 {
 
 .upload-area {
     width: 100%;
-    min-height: 320px;
+    height: 320px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1029,16 +1029,22 @@ h4 {
         display: block;
     }
 
-    img {
-        display: none;
-        width: 100%;
-        border-radius: 10px;
+    &.active {
+        background-color: rgba(251, 224, 220, 0.4);
+        border: 2px dashed $full-pink;
     }
 
     &.error-area {
         background-color: $light-pink;
         border: 2px dashed $full-pink;
     }
+}
+
+.uploaded-image {
+    display: none;
+    height: 100%;
+    border-radius: 10px;
+    object-fit: contain;
 }
 
 .btn-upload-file {
@@ -1086,8 +1092,7 @@ h4 {
     }
 
     &.disabled {
-        background-color: $light-gray;
-        color: $full-gray;
+        background-color: #D5D5D5;
         cursor: not-allowed;
         pointer-events: none;
     }

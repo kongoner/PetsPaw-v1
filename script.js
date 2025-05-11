@@ -1,6 +1,69 @@
-////////////////////////////////////////////////////////////////////
+/////// SPA-navigation
 
-// Navigation
+// Each route corresponds to a function that shows the appropriate page
+let routes = {
+    '': goToHomePage,
+    'voting': goToVotingPage,
+    'breeds': goToBreedsPage,
+    'gallery': goToGalleryPage,
+    'likes': goToLikesPage,
+    'search': goToSearchPage,
+    'favourites': goToFavouritesPage,
+    'dislikes': goToDislikesPage,
+    'breed-info': goToBreedInfoPage,
+};
+
+// 404 HANDLER
+function renderNotFound() {
+    alert('404 Not Found');
+}
+
+// Changes the URL hash (e.g., #voting) without reloading the page
+function navigateTo(url) {
+    location.hash = url;
+}
+
+// Looks at the current hash and shows the corresponding page
+function render() {
+    const [path, query] = location.hash.slice(1).split('?'); // Split the route and parameters
+    const routeAction = routes[path] || renderNotFound;
+
+    if (query) {
+        // If there are parameters, pass them to the route function
+        const params = new URLSearchParams(query);
+        routeAction(params);
+    } else {
+        routeAction();
+    }
+}
+
+// Browser history support
+window.addEventListener('hashchange', render);
+
+// Initialization on page load
+document.addEventListener('DOMContentLoaded', () => {
+    // Intercept link clicks with data-link to prevent full page reload
+    document.body.addEventListener('click', e => {
+        const links = e.target.closest('[data-link]');
+        if (links && links.getAttribute('href')) {
+            e.preventDefault();
+            navigateTo(links.getAttribute('href'));
+        }
+    });
+
+    render();
+});
+
+// Back button handler. Makes all .btn-back buttons go one step back in browser history
+document.querySelectorAll('.btn-back').forEach(button => {
+    button.addEventListener('click', () => {
+        history.back();
+    });
+});
+
+/////////////////////////////////////////////////////////////////////////////////
+
+/////// Pages
 
 // Main Navigation with the links to pages
 const mainNavigation = document.querySelector('.navigation');
@@ -123,6 +186,8 @@ function goToGalleryPage() {
             page.style.display = 'none';
         }
     });
+
+    initializeBreedDropdownGal();
 }
 
 // Search result page
@@ -151,40 +216,6 @@ function goToSearchPage() {
             page.style.display = 'none';
         }
     });
-}
-
-searchButton.addEventListener('click', () => {
-    if (searchInput.value.trim() === '') {
-        alert('Please enter a search term.');
-        return;
-    }
-    goToSearchPage();
-    showSearchResults();
-})
-
-// Showing search results
-async function showSearchResults(grid) {
-    const allBreeds = await fetchBreeds(100, 0, 'ASC'); // Fetch all breeds for search filtering
-    searchGrid.innerHTML = ''; // Clear existing options
-
-    const nothingFoundMessage = searchPage.querySelector('.nothing-found-message');
-
-    const currentValue = searchInput.value.toLowerCase();
-    const resultMessage = document.createElement('p');
-    resultMessage.className = 'subtitle';
-    resultMessage.innerHTML = `Search results for: <span class="subtitle bold">"${currentValue}"</span>`
-    nothingFoundMessage.before(resultMessage);
-
-    allBreeds.forEach(breed => {
-        if (breed.name.toLowerCase().includes(currentValue)) {
-            const breedCard = createBreedCard(breed);
-            searchGrid.appendChild(breedCard);
-        } else {
-            // Show nothing found message for each page
-            nothingFoundMessage.style.display = 'block';
-        }
-    });
-
 }
 
 // Likes page
@@ -263,28 +294,60 @@ function goToDislikesPage() {
 }
 
 // Breed info page
-function goToBreedInfoPage() {
-    contentRight.style.display = 'flex';
-    gridWrapper.style.display = 'none';
-    breedInfoPage.style.display = 'flex';
-    filtersAndSortContainer.style.display = 'none';
-    idItem.style.display = 'block';
-    pageItem.classList.remove('current');
-    
-    // Retrieve breedId from URL
-    const params = new URLSearchParams(location.hash.split('?')[1]);
+function goToBreedInfoPage(params) {
+    // if params is null, get them from hash
+    if (!params) {
+        const queryString = location.hash.split('?')[1];
+        params = new URLSearchParams(queryString);
+    }
+
     const breedId = params.get('id');
 
     if (!breedId) {
         console.error('Breed ID is missing in the URL');
         alert('Breed ID is missing. Redirecting to the home page.');
-        navigateTo(''); // Redirect to the home page
+        navigateTo('');
+        render(); 
         return;
     }
 
-    // Load breed data
+    contentRight.style.display = 'flex';
+    breedsPage.style.display = 'flex';
+    gridWrapper.style.display = 'none';
+    breedInfoPage.style.display = 'flex';
+    filtersAndSortContainer.style.display = 'none';
+    idItem.style.display = 'block';
+    pageItem.classList.remove('current');
+
+    // Hide other pages
+    const allPages = contentRight.querySelectorAll(':scope > *:not(.toolbar)');
+    allPages.forEach(page => {
+        if (page !== breedsPage) {
+            page.style.display = 'none';
+        }
+    });
+
     loadBreedInfoPage(breedId);
 }
+
+// Upload modal window
+const uploadWindowWrapper = document.querySelector('.upload-wrapper');
+const toUploadButton = document.querySelector('.btn-upload');
+const closeButtonUpload = document.querySelector('.btn-close');
+
+function goToUploadWindow() {
+    uploadWindowWrapper.style.display = 'flex';
+}
+
+toUploadButton.addEventListener('click', () => {
+    goToUploadWindow();
+})
+
+closeButtonUpload.addEventListener('click', () => {
+    uploadWindowWrapper.style.display = 'none';
+})
+
+/////////////////////////////////////////////////////////////////////////////////
 
 // Main navigation cards functionality
 votingPageCard.addEventListener('click', () => {
@@ -293,7 +356,11 @@ votingPageCard.addEventListener('click', () => {
     getUserLogs();
     });
 breedsPageCard.addEventListener('click', goToBreedsPage);
-galleryPageCard.addEventListener('click', goToGalleryPage);
+galleryPageCard.addEventListener('click', () => {
+    goToGalleryPage();
+    currentPageGal = 0; // Reset current page to 0
+    getGalleryImages();
+    });
 
 // Toolbar links functionality
 likesPageLink.addEventListener('click', () => {
@@ -314,70 +381,7 @@ dislikesPageLink.addEventListener('click', () => {
     // getUserLogs(); // Not working. Back to this later
 });
 
-
-// SPA-navigation
-// Each route corresponds to a function that shows the appropriate page
-let routes = {
-    '': goToHomePage,
-    'voting': goToVotingPage,
-    'breeds': goToBreedsPage,
-    'gallery': goToGalleryPage,
-    'likes': goToLikesPage,
-    'search': goToSearchPage,
-    'favourites': goToFavouritesPage,
-    'dislikes': goToDislikesPage,
-    'breed-info': goToBreedInfoPage,
-};
-
-// 404 HANDLER
-function renderNotFound() {
-    alert('404 Not Found');
-}
-
-// Changes the URL hash (e.g., #voting) without reloading the page
-function navigateTo(url) {
-    location.hash = url;
-}
-
-// Looks at the current hash and shows the corresponding page
-function render() {
-    const [path, query] = location.hash.slice(1).split('?'); // Split the route and parameters
-    const routeAction = routes[path] || renderNotFound;
-
-    if (query) {
-        // If there are parameters, pass them to the route function
-        const params = new URLSearchParams(query);
-        routeAction(params);
-    } else {
-        routeAction();
-    }
-}
-
-// Browser history support
-window.addEventListener('hashchange', render);
-
-// Initialization on page load
-document.addEventListener('DOMContentLoaded', () => {
-    // Intercept link clicks with data-link to prevent full page reload
-    document.body.addEventListener('click', e => {
-        const links = e.target.closest('[data-link]');
-        if (links && links.getAttribute('href')) {
-            e.preventDefault();
-            navigateTo(links.getAttribute('href'));
-        }
-    });
-
-    render();
-});
-
-// Back button handler. Makes all .btn-back buttons go one step back in browser history
-document.querySelectorAll('.btn-back').forEach(button => {
-    button.addEventListener('click', () => {
-        history.back();
-    });
-});
-
-////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 
 // Voting page functionality 
 
@@ -587,7 +591,7 @@ async function getVotesByType(voteType, grid) {
         }
 
         filteredVotes.forEach(vote => {
-            createImageCell(vote.image.url, grid);
+            createImageCell(vote.image.url, grid, vote.image_id, vote.id);
         });
 
     } catch (error) {
@@ -600,28 +604,90 @@ async function getVotesByType(voteType, grid) {
 }
 
 // Create grid cell
-function createImageCell(imageUrl, grid) {
+function createGalleryImageCell(imageUrl, grid, imageId = null, voteId = null) {
     const imageCell = document.createElement('div');
+    imageCell.className = 'grid-cell gallery-card';
+    imageCell.style.backgroundImage = `url("${imageUrl}")`;
 
-    if (grid === favouritesGrid) {
-        imageCell.className = 'grid-cell gallery-card';
-        const favButton = document.createElement('button');
-        favButton.classList.add('btn-gallery-fav');
-        const favIcon = document.createElement('img');
-        favIcon.src = 'images/fav-20.svg';
-        favButton.append(favIcon);
-        imageCell.append(favButton);
+    const favButton = document.createElement('button');
+    favButton.classList.add('btn-gallery-fav');
+    const favIcon = document.createElement('img');
+    favIcon.src = 'images/fav-color-20.svg';
+    const favButtonLoader = document.createElement('img');
+    favButtonLoader.src = 'images/loading-20.svg';
+    favButtonLoader.style.display = 'none';
+    favButtonLoader.style.animation = 'loader-spinning 1.2s linear infinite'
+    favButton.append(favIcon, favButtonLoader);
+    imageCell.append(favButton);
+
+    if (voteId) {
+        favIcon.src = 'images/fav-color-20.svg';
+        favButton.addEventListener('click', async () => {
+            try {
+                favIcon.style.display = 'none';
+                favButtonLoader.style.display = 'block';
+
+                await fetch(`${VOTES_URL}/${voteId}`, {
+                    method: 'DELETE',
+                    headers: { 'x-api-key': API_KEY }
+                });
+                favIcon.src = 'images/fav-20.svg';
+                if (grid === favouritesGrid) {
+                    imageCell.remove(); // Remove card from favourites page
+                }
+            } finally {
+                favIcon.style.display = 'block';
+                favButtonLoader.style.display = 'none';
+            }
+        });
     } else {
-        imageCell.className = 'grid-cell';
+        favIcon.src = 'images/fav-20.svg';
+        favButton.addEventListener('click', async () => {
+            try {
+                favIcon.style.display = 'none';
+                favButtonLoader.style.display = 'block';
+
+                const res = await fetch(VOTES_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': API_KEY
+                    },
+                    body: JSON.stringify({ image_id: imageId, value: 2 })
+                });
+                const data = await res.json();
+                favIcon.src = 'images/fav-color-20.svg'; // Change icon after adding to favourites
+            } catch (error) {
+                console.error('Error adding to favourites:', error);
+                alert('Failed to add to favourites. Please try again later.');
+            } finally {
+                favIcon.style.display = 'block';
+                favButtonLoader.style.display = 'none';
+            }
+        });
     }
 
+    grid.append(imageCell);
+}
+
+function createStandardImageCell(imageUrl, grid) {
+    const imageCell = document.createElement('div');
+    imageCell.className = 'grid-cell';
     imageCell.style.backgroundImage = `url("${imageUrl}")`;
     grid.append(imageCell);
 }
 
-////////////////////////////////////////////////////////////////////
+function createImageCell(imageUrl, grid, imageId = null, voteId = null) {
+    if (grid === favouritesGrid || grid === galleryGrid) {
+        createGalleryImageCell(imageUrl, grid, imageId, voteId);
+    } else {
+        createStandardImageCell(imageUrl, grid);
+    }
+}
 
-// Breeds Page functionality 
+/////////////////////////////////////////////////////////////////////////////////
+
+/////// Breeds Page functionality 
 
 // Constants
 const BREEDS_URL = 'https://api.thecatapi.com/v1/breeds';
@@ -652,7 +718,6 @@ async function fetchBreeds(limit, page, order) {
         return data;
     } catch (error) {
         console.error('Error fetching data:', error);
-        alert('Failed to fetch data. Please try again later.');
         return [];
     } finally {
         showLoader(false);
@@ -679,7 +744,8 @@ function displayBreeds(breeds) {
 // Create Breed Card
 function createBreedCard(breed) {
     const breedCard = document.createElement('a');
-    breedCard.href = breed.id;
+    breedCard.href = `breed-info?id=${breed.id}`;
+    breedCard.setAttribute('data-link', '');
     breedCard.className = 'grid-cell breed-card';
     breedCard.dataset.breedId = breed.id;
     breedCard.style.backgroundImage = `url("${breed.image?.url || ''}")`;
@@ -796,7 +862,9 @@ async function initializePage() {
 initializePage();
 
 
-// Breed info Page 
+/////////////////////////////////////////////////////////////////////////////////
+
+/////// Breed info Page 
 
 // Add click event listener to breed cards
 function setupBreedCardListeners() {
@@ -832,7 +900,6 @@ async function loadBreedInfoPage(breedId) {
 
         if (!breed) {
             console.error(`The selected breed could not be found (ID: ${breedId})`);
-            alert('The selected breed could not be found. Redirecting to the breeds page.');
             navigateTo('breeds');
             return;
         }
@@ -841,7 +908,6 @@ async function loadBreedInfoPage(breedId) {
         renderBreedInfoPage(breed);
     } catch (error) {
         console.error(`Error loading breed info page for breed ID "${breedId}":`, error);
-        alert(`Failed to load breed details for breed ID "${breedId}". Please try again later.`);
     } finally {
         const breedInfoPage = document.querySelector('.breed-info-page');
         const loader = breedInfoPage.querySelector('.loader-page');
@@ -876,9 +942,255 @@ function renderBreedInfoPage(breed) {
     breedInfoPage.style.display = 'block';
 }
 
+/////////////////////////////////////////////////////////////////////////////////
 
+/////// Gallery page functionality
 
-// Helper
+// Getting images to gallery
+const GALLERY_URL = 'https://api.thecatapi.com/v1/images';
+const galleryGrid = document.querySelector('.grid.grid-gallery');
+
+// Default parameters
+let currentLimitGal = 5;
+let currentPageGal = 0;
+let currentOrderGal = 'RANDOM';
+let currentImageTypeGal = 'jpg,png';
+let currentBreedGal = '';
+
+async function getGalleryImages() {
+    try {
+        // Clear previous images
+        galleryGrid.innerHTML = '';
+
+        // Show loader before fetching data
+        loaderSpin.forEach(loader => {
+            loader.style.display = 'block';
+        });
+
+        const response = await fetch(`${GALLERY_URL}/search?mime_types=${currentImageTypeGal}&order=${currentOrderGal}&page=${currentPageGal}&limit=${currentLimitGal}&breed_ids=${currentBreedGal}`, {
+        headers: {
+            'x-api-key': API_KEY
+        }
+        });
+        const data = await response.json();
+
+        data.forEach(catImage => {
+            createImageCell(catImage.url, galleryGrid, catImage.id);
+        })
+
+    updatePaginationButtonsStateGal();
+
+    } catch (error) {
+        console.error('Error fetching gallery images:', error);
+    } finally {
+        loaderSpin.forEach(loader => {
+            loader.style.display = 'none';
+        });
+    }
+
+}
+
+// Initialize Breed Dropdown
+const breedDropdownGal = document.getElementById('breed-gal');
+
+async function initializeBreedDropdownGal() {
+    const allBreeds = await fetchBreeds(100, 0, 'ASC'); // Fetch all breeds for the dropdown
+    breedDropdownGal.innerHTML = ''; // Clear existing options
+    breedDropdownGal.append(createDropdownOption('', 'None'));
+
+    allBreeds.forEach(breed => {
+        breedDropdownGal.append(createDropdownOption(breed.id, breed.name));
+    });
+}
+
+breedDropdownGal.addEventListener('change', () => {
+    currentBreedGal = breedDropdownGal.value;
+})
+
+// Set order
+const orderDropdownGal = document.getElementById('order-gal');
+
+orderDropdownGal.addEventListener('change', () => {
+    currentOrderGal = orderDropdownGal.value;
+})
+
+// Set Image type
+const imageTypeDropdownGal = document.getElementById('image-type-gal');
+
+imageTypeDropdownGal.addEventListener('change', () => {
+    currentImageTypeGal = imageTypeDropdownGal.value;
+})
+
+// Set limit
+const limitDropdownGal = document.getElementById('limit-gal');
+
+limitDropdownGal.addEventListener('change', () => {
+    currentLimitGal = limitDropdownGal.value;
+})
+
+// Reload/Set all parameters button
+const reloadButtonGal = document.querySelector('.btn-reload');
+
+reloadButtonGal.addEventListener('click', () => {
+    getGalleryImages();
+    currentPageGal = 0;
+})
+
+// Pagination
+const prevButtonGal = galleryPage.querySelector('.page-button.prev');
+const nextButtonGal = galleryPage.querySelector('.page-button.next');
+
+prevButtonGal.addEventListener('click', () => {
+    if (currentPageGal > 0) {
+        currentPageGal--;
+        getGalleryImages();
+    }
+})
+
+nextButtonGal.addEventListener('click', () => {
+        currentPageGal++;
+        getGalleryImages();
+})
+
+function updatePaginationButtonsStateGal() {
+    if (currentPageGal === 0) {
+        prevButtonGal.classList.add('disabled');
+    } else {
+        prevButtonGal.classList.remove('disabled');
+    }
+
+    if (galleryGrid.children.length < currentLimitGal) {
+        nextButtonGal.classList.add('disabled');
+    } else {
+        nextButtonGal.classList.remove('disabled');
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+
+//////// Search functionality
+
+searchButton.addEventListener('click', () => {
+    if (searchInput.value.trim() === '') {
+        alert('Please enter a search term.');
+        return;
+    }
+    goToSearchPage();
+    showSearchResults();
+})
+
+// Showing search results
+async function showSearchResults(grid) {
+    const allBreeds = await fetchBreeds(100, 0, 'ASC'); // Fetch all breeds for search filtering
+    searchGrid.innerHTML = ''; // Clear existing images
+
+    const nothingFoundMessage = searchPage.querySelector('.nothing-found-message');
+
+    const currentValue = searchInput.value.toLowerCase();
+    const resultMessage = searchPage.querySelector('.subtitle');
+    const resultValue = resultMessage.querySelector('.subtitle.bold');
+    resultValue.textContent = `${currentValue}`;
+    nothingFoundMessage.before(resultMessage);
+
+    let hasMatches = false;
+
+    allBreeds.forEach(breed => {
+        if (breed.name.toLowerCase().includes(currentValue)) {
+            const breedCard = createBreedCard(breed);
+            searchGrid.appendChild(breedCard);
+            hasMatches = true;
+        }
+    });
+
+    // Show or hide the nothing found message based on matches
+    nothingFoundMessage.style.display = hasMatches ? 'none' : 'block';
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+
+////////// Upload functionality
+const inputFile = document.getElementById('input-file');
+const uploadArea = document.querySelector('.upload-area');
+const uploadAreaText = uploadArea.querySelector('p');
+const uploadedImage = document.querySelector('.uploaded-image');
+const fileName = document.querySelector('.image-file-name');
+const uploadButton = document.querySelector('.btn-upload-file');
+const uploadSuccessMessage = document.querySelector('.upload-message.success');
+const uploadErrorMessage = document.querySelector('.upload-message.error');
+
+inputFile.addEventListener('change', uploadOnClient);
+
+function uploadOnClient() {
+    let imgUrl = URL.createObjectURL(inputFile.files[0]);
+    uploadAreaText.style.display = 'none';
+    uploadedImage.style.display = 'block';
+    uploadArea.style.backgroundImage = 'none';
+    uploadedImage.src = imgUrl;
+    fileName.textContent = `Image File Name: ${inputFile.files[0].name}`;
+    uploadButton.classList.remove('disabled');
+}
+
+uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('active');
+})
+
+uploadArea.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('active');
+})
+
+uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    inputFile.files = e.dataTransfer.files;
+    uploadArea.classList.remove('active');
+    uploadOnClient();
+})
+
+async function uploadToServer() {
+    try {
+      uploadButton.classList.add('loading'); // Showing loader on button
+  
+      const fileToUpload = inputFile.files[0];
+  
+      // FormData for API post
+      const formData = new FormData();
+      formData.append('file', fileToUpload);
+  
+      const UPLOAD_URL = 'https://api.thecatapi.com/v1/images/upload';
+  
+      // Setting up API request
+      const response = await fetch(UPLOAD_URL, {
+        method: 'POST',
+        headers: {
+          'x-api-key': API_KEY
+        },
+        body: formData
+      });
+  
+      // Handle the API response
+      if (response.ok) {
+        uploadErrorMessage.style.display = 'none'; // Hide error message
+        uploadSuccessMessage.style.display = 'flex';
+      } else {
+        uploadSuccessMessage.style.display = 'none'; // Hide success message
+        uploadErrorMessage.style.display = 'flex';
+      }
+  
+    } catch (error) {
+      console.error(`An error occurred during the upload: ${error.message}`);
+    } finally {
+      uploadButton.classList.remove('loading'); // Remove loader from button
+    }
+  }
+
+  uploadButton.addEventListener('click', uploadToServer);
+
+/////////////////////////////////////////////////////////////////////////////////
+
+// Utilities
+
 // Delete all user votes!!!
 async function deleteAllVotes() {
     try {
