@@ -1,3 +1,18 @@
+// Setting Sub ID for each user
+
+function getOrCreateUserSubId() {
+    let subId = localStorage.getItem('user_sub_id');
+    if (!subId) {
+        subId = 'user_' + Math.random().toString(36).substring(2, 10);
+        localStorage.setItem('user_sub_id', subId);
+    }
+    return subId;
+}
+
+const USER_SUB_ID = getOrCreateUserSubId();
+
+/////////////////////////////////////////////////////////////////////////////////
+
 /////// SPA-navigation
 
 // Each route corresponds to a function that shows the appropriate page
@@ -436,6 +451,7 @@ const VOTES_URL = 'https://api.thecatapi.com/v1/votes';
 async function vote(value) {
     const body = {
         image_id: currentImageToVote.id,
+        sub_id: USER_SUB_ID,
         value
     };
 
@@ -536,7 +552,7 @@ function createUserLog(vote) {
 }
 
 // Add votings to Likes, Favourites and Dislikes
-const GET_VOTES_URL = 'https://api.thecatapi.com/v1/votes?limit=100';
+const GET_VOTES_URL = `https://api.thecatapi.com/v1/votes?limit=100&sub_id=${USER_SUB_ID}`;
 const likesGrid = document.querySelector(".grid.grid-likes");
 const favouritesGrid = document.querySelector(".grid.grid-favourites");
 const dislikesGrid = document.querySelector(".grid.grid-dislikes");
@@ -1184,9 +1200,10 @@ async function uploadToServer() {
     } finally {
       uploadButton.classList.remove('loading'); // Remove loader from button
     }
-  }
+}
 
-  uploadButton.addEventListener('click', uploadToServer);
+uploadButton.addEventListener('click', uploadToServer);
+
 
 /////////////////////////////////////////////////////////////////////////////////
 
