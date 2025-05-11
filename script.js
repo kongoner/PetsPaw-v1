@@ -311,6 +311,7 @@ function goToBreedInfoPage(params) {
         return;
     }
 
+    heroImage.style.display = 'none';
     contentRight.style.display = 'flex';
     breedsPage.style.display = 'flex';
     gridWrapper.style.display = 'none';
