@@ -670,7 +670,7 @@ function createGalleryImageCell(imageUrl, grid, imageId = null, voteId = null) {
                         'Content-Type': 'application/json',
                         'x-api-key': API_KEY
                     },
-                    body: JSON.stringify({ image_id: imageId, value: 2 })
+                    body: JSON.stringify({ image_id: imageId, value: 2, sub_id: USER_SUB_ID })
                 });
                 const data = await res.json();
                 favIcon.src = 'images/fav-color-20.svg'; // Change icon after adding to favourites
