@@ -1214,17 +1214,35 @@ function setTheme(theme) {
   document.body.setAttribute('data-theme', theme);
   localStorage.setItem('theme', theme);
   themeToggleCheckbox.checked = theme === 'dark';
+
+  updateImagesForTheme(theme);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('theme') || 'light';
   setTheme(savedTheme);
+  updateImagesForTheme(theme);
 });
 
 themeToggleCheckbox.addEventListener('change', () => {
   const theme = themeToggleCheckbox.checked ? 'dark' : 'light';
   setTheme(theme);
 });
+
+function updateImagesForTheme(theme) {
+  const logo = document.getElementById('logo');
+  const hero = document.querySelector('.hero-image');
+
+  if (!logo || !hero) return;
+
+  if (theme === 'dark') {
+    logo.src = 'images/logo-light.svg';
+    hero.src = 'images/girl-and-pet-light@2x.webp';
+  } else {
+    logo.src = 'images/logo.svg';
+    hero.src = 'images/girl-and-pet@2x.webp';
+  }
+}
 
 /////////////////////////////////////////////////////////////////////////////////
 

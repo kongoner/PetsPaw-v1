@@ -1133,9 +1133,6 @@ body[data-theme=dark] {
   background-color: #1D1D1D;
   color: white;
 }
-body[data-theme=dark] .logo {
-  filter: brightness(10);
-}
 body[data-theme=dark] .nav-card img {
   outline: 4px solid rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
