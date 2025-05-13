@@ -1207,6 +1207,27 @@ uploadButton.addEventListener('click', uploadToServer);
 
 /////////////////////////////////////////////////////////////////////////////////
 
+// Dark theme
+const themeToggleCheckbox = document.getElementById('theme-switch');
+
+function setTheme(theme) {
+  document.body.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+  themeToggleCheckbox.checked = theme === 'dark';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  setTheme(savedTheme);
+});
+
+themeToggleCheckbox.addEventListener('change', () => {
+  const theme = themeToggleCheckbox.checked ? 'dark' : 'light';
+  setTheme(theme);
+});
+
+/////////////////////////////////////////////////////////////////////////////////
+
 // Utilities
 
 // Delete all user votes!!!

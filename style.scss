@@ -11,6 +11,8 @@ $full-violet: #B4B7FF;
 $full-gray: #8C8C8C;
 $light-gray: #F8F8F7;
 $dark-gray: #1D1D1D;
+$transparent-pink: rgba(255, 134, 142, 0.2);
+$transparent-white-bg: rgba(255, 255, 255, 0.05);
 
 // Resets
 *,
@@ -22,14 +24,11 @@ $dark-gray: #1D1D1D;
     font-family: 'Jost', sans-serif;
     font-size: 16px;
     line-height: 150%;
-    color: black;
     border: none;
 }
 
-html,
 body {
     width: 100%;
-    height: 100%;
     font-family: 'Jost', sans-serif;
     background-color: $light-gray;
     -webkit-font-smoothing: antialiased;
@@ -84,6 +83,8 @@ h4 {
     font-weight: 500;
 }
 
+//////////////////////////////////////////////////////////////////////
+
 // Animations
 @keyframes loader-spinning {
     0% {
@@ -94,6 +95,8 @@ h4 {
     }
 }
 
+//////////////////////////////////////////////////////////////////////
+
 // Layout
 .container {
     display: flex;
@@ -102,7 +105,7 @@ h4 {
     gap: 20px;
     max-width: 1440px;
     margin: 0 auto;
-    padding: 30px 30px 0px 30px;;
+    padding: 30px;
 }
 
 .content-left {
@@ -131,6 +134,13 @@ h4 {
     align-items: flex-start;
     gap: 60px;
     flex-wrap: wrap;
+}
+
+.main-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .greeting {
@@ -227,6 +237,8 @@ h4 {
     margin: -30px 0px 0px -10px;
 }
 
+//////////////////////////////////////////////////////////////////////
+
 .toolbar {
     display: flex;
     flex-direction: row;
@@ -321,6 +333,8 @@ h4 {
     }
 }
 
+//////////////////////////////////////////////////////////////////////
+
 .breadcrumbs {
     display: flex;
     flex-direction: row;
@@ -369,6 +383,8 @@ h4 {
 .id-item {
     display: none;
 }
+
+//////////////////////////////////////////////////////////////////////
 
 // Voting page styles
 .voting-page {
@@ -492,6 +508,8 @@ h4 {
     font-weight: 400;
     color: $full-gray;
 }
+
+//////////////////////////////////////////////////////////////////////
 
 // Breeds page styles
 .breeds-page {
@@ -697,6 +715,8 @@ h4 {
     }
 }
 
+//////////////////////////////////////////////////////////////////////
+
 .breed-info-page {
     display: none;
     flex-direction: column;
@@ -759,7 +779,6 @@ h4 {
     align-items: center;
     margin-top: 48px;
     padding: 0 20px 40px 20px;
-    background-color: white;
     border-radius: 20px;
     text-align: center;
     outline: 2px solid $light-pink;
@@ -796,6 +815,7 @@ h4 {
     gap: 5px;
 }
 
+//////////////////////////////////////////////////////////////////////
 
 // Gallery page styles
 .gallery-page {
@@ -950,6 +970,8 @@ h4 {
         }
     }
 }
+
+//////////////////////////////////////////////////////////////////////
     
 // Upload popup
 .upload-wrapper {
@@ -964,6 +986,19 @@ h4 {
     background-color: rgba(0, 0, 0, 0.6);
     text-align: center;
     z-index: 9999;
+}
+
+.upload-popup {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    max-width: 680px;
+    padding: 100px 20px 20px 20px;
+    background-color: $light-gray;
+    border-radius: 20px;
+    overflow-y: auto;
 }
 
 .btn-close {
@@ -986,19 +1021,6 @@ h4 {
             filter: brightness(10);
         }
     }
-}
-
-.upload-popup {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    max-width: 680px;
-    padding: 100px 20px 20px 20px;
-    background-color: $light-gray;
-    border-radius: 20px;
-    overflow-y: auto;
 }
 
 .upload-header {
@@ -1110,6 +1132,8 @@ h4 {
     border-radius: 10px;
 }
 
+//////////////////////////////////////////////////////////////////////
+
 // Search result page
 .search-result-page {
     display: none;
@@ -1139,6 +1163,8 @@ h4 {
     margin: 100px 100px;
     animation: loader-spinning 1.2s linear infinite;
 }
+
+//////////////////////////////////////////////////////////////////////
 
 // Likes page
 .likes-page {
@@ -1171,4 +1197,399 @@ h4 {
     padding: 20px;
     background-color: white;
     border-radius: 20px;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+// Dark theme
+
+// Theme toggle
+.theme-toggle {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.toggle-label {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    background-color: #fddede;
+    border-radius: 32px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.toggle-thumb {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 16px;
+    height: 16px;
+    background-color: $full-pink;
+    border-radius: 100%;
+    transition: transform 0.3s;
+    z-index: 1;
+}
+
+// Icons eye-open, eye-close
+.icon {
+    position: absolute;
+    padding: 4px;
+    border-radius: 100%;
+    transition: opacity 0.3s;
+}
+
+.eye-open {
+    left: -32px;
+    opacity: 1;
+    background-color: white;
+}
+
+.eye-closed {
+    left: -32px;
+    opacity: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+// Active state
+input[type='checkbox'] {
+    display: none;
+
+    &:checked + .toggle-label {
+        background-color: rgba(255, 134, 142, 0.2);
+
+        .toggle-thumb {
+            transform: translateX(20px);
+        }
+
+        .eye-open {
+            opacity: 0;
+        }
+
+        .eye-closed {
+            opacity: 1;
+        }
+    }
+}
+
+// Dark styles 
+body[data-theme='dark'] {
+    background-color: $dark-gray;
+    color: white;
+
+    // Main section
+
+    .logo {
+        filter: brightness(10);
+    }
+
+    .nav-card {
+        img {
+            outline: 4px solid rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .label {
+            background-color: $transparent-white-bg;
+            transition: all 0.3s ease;
+        }
+
+        &:hover {
+            img {
+            outline: 0px solid rgba(0, 0, 0, 0.2);
+            outline-offset: -4px;
+            }
+            .label {
+            background-color: $light-pink;
+            }
+        }
+
+        &.current {
+
+            img {
+                outline: 4px solid $full-pink;
+            }
+
+            .label {
+            background-color: $full-pink;
+            color: white;
+            }
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////
+
+    // Toolbar
+
+    .search-bar-wrapper {
+        background-color: $transparent-white-bg;
+    }
+
+    .search-bar {
+        &:hover {
+            outline: 2px solid $transparent-pink;
+        }
+
+        &:focus {
+            outline: 2px solid $full-pink;
+            color: white;
+        }
+    }
+
+    .search-button {
+        background-color: $transparent-pink;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: $full-pink;
+
+            img {
+                filter: brightness(10);
+            }
+        }
+    }
+
+    .link-saved {
+        background-color: $transparent-white-bg;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: $transparent-pink;
+        }
+
+        &.current {
+            background-color: $full-pink;
+
+            img {
+                filter: brightness(10);
+            }
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////
+
+    // Breadcrumbs
+
+    .btn-back {
+        background-color: $transparent-pink;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: $full-pink;
+
+            img {
+                filter: brightness(10);
+            }
+        }
+    }
+
+    .breadcrumbs-item {
+        color: $full-pink;
+        background-color: $transparent-pink;
+
+        &.current {
+            background-color: $full-pink;
+            color: white;
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////
+
+    // Voting page
+
+    .voting-page {
+        background-color: $transparent-white-bg;
+    }
+
+    .voting-buttons-container {
+        background-color: #282828;
+        outline: 4px solid #282828;
+    }
+
+    .user-action {
+        background-color: $transparent-white-bg;
+    }
+
+    .timestamp {
+        background-color: $dark-gray;
+    }
+
+    /////////////////////////////////////////////////////////////////
+
+    // Breeds page
+
+    .breeds-page {
+        background-color: $transparent-white-bg;
+    }
+
+    .dropdown {
+        background-color: $transparent-white-bg;
+
+        &:hover {
+            outline: 2px solid $transparent-pink;
+        }
+
+        &:focus {
+            outline: 2px solid $full-pink;
+        }
+    }
+
+    .order {
+        background-color: $transparent-white-bg;
+
+        &:hover,
+        &.active {
+            outline: 2px solid $transparent-pink;
+        }
+    }
+
+    .breed-name {
+        background-color: $dark-gray;
+    }
+
+    .page-button {
+        background-color: $transparent-pink;
+
+        &:hover {
+            background-color: $full-pink;
+            color: white;
+        }
+
+        &.disabled {
+            background-color: $transparent-white-bg;
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////
+
+    // Breeds Info page
+
+    .breed-description {
+        outline: 2px solid $transparent-pink;
+    }
+
+    .breed-title {
+        background-color: #282828;
+    }
+
+    /////////////////////////////////////////////////////////////////
+
+    // Gallery page
+
+    .gallery-page {
+        background-color: $transparent-white-bg;
+    }
+    .btn-upload {
+        background-color: $transparent-pink;
+    }
+
+    .filters-gallery {
+        background-color: $transparent-white-bg;
+    }
+
+    .dropdown-light {
+        background-color: $dark-gray;
+    }
+
+    .btn-reload {
+        background-color: $dark-gray;
+
+        &:hover {
+            background-color: $transparent-pink;
+        }
+    }
+
+    .btn-gallery-fav {
+        background-color: $dark-gray;
+
+        &:hover {
+            background-color: $full-pink;
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////
+
+    // Upload page
+
+    .upload-popup {
+        background-color: #282828;
+    }
+
+    .btn-close {
+        background-color: $transparent-white-bg;
+
+        &:hover {
+            background-color: $transparent-pink;
+        }
+    }
+
+    .upload-area {
+        border: 2px dashed $transparent-pink;
+        background-color: $transparent-white-bg;
+
+        &.active {
+            background-color: $transparent-pink;
+            border: 2px dashed $full-pink;
+        }
+
+        &.error-area {
+            background-color: $transparent-pink;
+            border: 2px dashed $full-pink;
+        }
+    }
+
+    .btn-upload-file {
+
+        &:hover {
+            background-color: $transparent-pink;
+            color: $full-pink;
+        }
+
+        &.disabled {
+            background-color: $transparent-white-bg;
+            color: $full-gray;
+        }
+    }
+
+    .upload-message {
+        background-color: $transparent-white-bg;
+    }
+
+    /////////////////////////////////////////////////////////////////
+
+    // Search result page
+
+    .search-result-page {
+        background-color: $transparent-white-bg;
+    }
+
+    .nothing-found-message {
+        background-color: $transparent-white-bg;
+    }
+
+    .subtitle {
+        &.bold {
+            color: white;
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////
+
+    // Likes, favourites and dislikes pages
+
+    .likes-page {
+        background-color: $transparent-white-bg;
+    }
+
+    .favourites-page {
+        background-color: $transparent-white-bg;
+    }
+
+    .dislikes-page {
+        background-color: $transparent-white-bg;
+    }
+
 }

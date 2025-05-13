@@ -8,14 +8,11 @@
   font-family: "Jost", sans-serif;
   font-size: 16px;
   line-height: 150%;
-  color: black;
   border: none;
 }
 
-html,
 body {
   width: 100%;
-  height: 100%;
   font-family: "Jost", sans-serif;
   background-color: #F8F8F7;
   -webkit-font-smoothing: antialiased;
@@ -83,7 +80,7 @@ h4 {
   gap: 20px;
   max-width: 1440px;
   margin: 0 auto;
-  padding: 30px 30px 0px 30px;
+  padding: 30px;
 }
 
 .content-left {
@@ -112,6 +109,13 @@ h4 {
   align-items: flex-start;
   gap: 60px;
   flex-wrap: wrap;
+}
+
+.main-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .greeting {
@@ -676,7 +680,6 @@ h4 {
   align-items: center;
   margin-top: 48px;
   padding: 0 20px 40px 20px;
-  background-color: white;
   border-radius: 20px;
   text-align: center;
   outline: 2px solid #FFDBDD;
@@ -870,6 +873,19 @@ h4 {
   z-index: 9999;
 }
 
+.upload-popup {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 680px;
+  padding: 100px 20px 20px 20px;
+  background-color: #F8F8F7;
+  border-radius: 20px;
+  overflow-y: auto;
+}
+
 .btn-close {
   position: absolute;
   top: 20px;
@@ -888,19 +904,6 @@ h4 {
 }
 .btn-close:hover img {
   filter: brightness(10);
-}
-
-.upload-popup {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  max-width: 680px;
-  padding: 100px 20px 20px 20px;
-  background-color: #F8F8F7;
-  border-radius: 20px;
-  overflow-y: auto;
 }
 
 .upload-header {
@@ -1059,4 +1062,274 @@ h4 {
   padding: 20px;
   background-color: white;
   border-radius: 20px;
+}
+
+.theme-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.toggle-label {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  background-color: #fddede;
+  border-radius: 32px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 16px;
+  height: 16px;
+  background-color: #FF868E;
+  border-radius: 100%;
+  transition: transform 0.3s;
+  z-index: 1;
+}
+
+.icon {
+  position: absolute;
+  padding: 4px;
+  border-radius: 100%;
+  transition: opacity 0.3s;
+}
+
+.eye-open {
+  left: -32px;
+  opacity: 1;
+  background-color: white;
+}
+
+.eye-closed {
+  left: -32px;
+  opacity: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+input[type=checkbox] {
+  display: none;
+}
+input[type=checkbox]:checked + .toggle-label {
+  background-color: rgba(255, 134, 142, 0.2);
+}
+input[type=checkbox]:checked + .toggle-label .toggle-thumb {
+  transform: translateX(20px);
+}
+input[type=checkbox]:checked + .toggle-label .eye-open {
+  opacity: 0;
+}
+input[type=checkbox]:checked + .toggle-label .eye-closed {
+  opacity: 1;
+}
+
+body[data-theme=dark] {
+  background-color: #1D1D1D;
+  color: white;
+}
+body[data-theme=dark] .logo {
+  filter: brightness(10);
+}
+body[data-theme=dark] .nav-card img {
+  outline: 4px solid rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+body[data-theme=dark] .nav-card .label {
+  background-color: rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+body[data-theme=dark] .nav-card:hover img {
+  outline: 0px solid rgba(0, 0, 0, 0.2);
+  outline-offset: -4px;
+}
+body[data-theme=dark] .nav-card:hover .label {
+  background-color: #FFDBDD;
+}
+body[data-theme=dark] .nav-card.current img {
+  outline: 4px solid #FF868E;
+}
+body[data-theme=dark] .nav-card.current .label {
+  background-color: #FF868E;
+  color: white;
+}
+body[data-theme=dark] .search-bar-wrapper {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+body[data-theme=dark] .search-bar:hover {
+  outline: 2px solid rgba(255, 134, 142, 0.2);
+}
+body[data-theme=dark] .search-bar:focus {
+  outline: 2px solid #FF868E;
+  color: white;
+}
+body[data-theme=dark] .search-button {
+  background-color: rgba(255, 134, 142, 0.2);
+  transition: all 0.3s ease;
+}
+body[data-theme=dark] .search-button:hover {
+  background-color: #FF868E;
+}
+body[data-theme=dark] .search-button:hover img {
+  filter: brightness(10);
+}
+body[data-theme=dark] .link-saved {
+  background-color: rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+body[data-theme=dark] .link-saved:hover {
+  background-color: rgba(255, 134, 142, 0.2);
+}
+body[data-theme=dark] .link-saved.current {
+  background-color: #FF868E;
+}
+body[data-theme=dark] .link-saved.current img {
+  filter: brightness(10);
+}
+body[data-theme=dark] .btn-back {
+  background-color: rgba(255, 134, 142, 0.2);
+  transition: all 0.3s ease;
+}
+body[data-theme=dark] .btn-back:hover {
+  background-color: #FF868E;
+}
+body[data-theme=dark] .btn-back:hover img {
+  filter: brightness(10);
+}
+body[data-theme=dark] .breadcrumbs-item {
+  color: #FF868E;
+  background-color: rgba(255, 134, 142, 0.2);
+}
+body[data-theme=dark] .breadcrumbs-item.current {
+  background-color: #FF868E;
+  color: white;
+}
+body[data-theme=dark] .voting-page {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+body[data-theme=dark] .voting-buttons-container {
+  background-color: #282828;
+  outline: 4px solid #282828;
+}
+body[data-theme=dark] .user-action {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+body[data-theme=dark] .timestamp {
+  background-color: #1D1D1D;
+}
+body[data-theme=dark] .breeds-page {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+body[data-theme=dark] .dropdown {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+body[data-theme=dark] .dropdown:hover {
+  outline: 2px solid rgba(255, 134, 142, 0.2);
+}
+body[data-theme=dark] .dropdown:focus {
+  outline: 2px solid #FF868E;
+}
+body[data-theme=dark] .order {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+body[data-theme=dark] .order:hover, body[data-theme=dark] .order.active {
+  outline: 2px solid rgba(255, 134, 142, 0.2);
+}
+body[data-theme=dark] .breed-name {
+  background-color: #1D1D1D;
+}
+body[data-theme=dark] .page-button {
+  background-color: rgba(255, 134, 142, 0.2);
+}
+body[data-theme=dark] .page-button:hover {
+  background-color: #FF868E;
+  color: white;
+}
+body[data-theme=dark] .page-button.disabled {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+body[data-theme=dark] .breed-description {
+  outline: 2px solid rgba(255, 134, 142, 0.2);
+}
+body[data-theme=dark] .breed-title {
+  background-color: #282828;
+}
+body[data-theme=dark] .gallery-page {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+body[data-theme=dark] .btn-upload {
+  background-color: rgba(255, 134, 142, 0.2);
+}
+body[data-theme=dark] .filters-gallery {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+body[data-theme=dark] .dropdown-light {
+  background-color: #1D1D1D;
+}
+body[data-theme=dark] .btn-reload {
+  background-color: #1D1D1D;
+}
+body[data-theme=dark] .btn-reload:hover {
+  background-color: rgba(255, 134, 142, 0.2);
+}
+body[data-theme=dark] .btn-gallery-fav {
+  background-color: #1D1D1D;
+}
+body[data-theme=dark] .btn-gallery-fav:hover {
+  background-color: #FF868E;
+}
+body[data-theme=dark] .upload-popup {
+  background-color: #282828;
+}
+body[data-theme=dark] .btn-close {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+body[data-theme=dark] .btn-close:hover {
+  background-color: rgba(255, 134, 142, 0.2);
+}
+body[data-theme=dark] .upload-area {
+  border: 2px dashed rgba(255, 134, 142, 0.2);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+body[data-theme=dark] .upload-area.active {
+  background-color: rgba(255, 134, 142, 0.2);
+  border: 2px dashed #FF868E;
+}
+body[data-theme=dark] .upload-area.error-area {
+  background-color: rgba(255, 134, 142, 0.2);
+  border: 2px dashed #FF868E;
+}
+body[data-theme=dark] .btn-upload-file:hover {
+  background-color: rgba(255, 134, 142, 0.2);
+  color: #FF868E;
+}
+body[data-theme=dark] .btn-upload-file.disabled {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #8C8C8C;
+}
+body[data-theme=dark] .upload-message {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+body[data-theme=dark] .search-result-page {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+body[data-theme=dark] .nothing-found-message {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+body[data-theme=dark] .subtitle.bold {
+  color: white;
+}
+body[data-theme=dark] .likes-page {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+body[data-theme=dark] .favourites-page {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+body[data-theme=dark] .dislikes-page {
+  background-color: rgba(255, 255, 255, 0.05);
 }/*# sourceMappingURL=style.css.map */
