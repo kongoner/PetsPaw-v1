@@ -58,6 +58,9 @@
         <!-- Content right -->
         <div class="content-right">
           <div class="toolbar">
+            <button class="btn-home">
+              <img src="images/icon-home-30.svg" />
+            </button>
             <div class="search-bar-wrapper">
               <input type="text" class="search-bar" placeholder="Search for breeds by name" />
               <button href="search" class="search-button">
@@ -276,7 +279,7 @@
             <!-- Upload popup -->
             <div class="upload-wrapper">
               <div class="upload-popup">
-                <button class="btn-close">
+                <button class="btn-close close-popup">
                   <img src="images/close-20.svg" alt="Close" />
                 </button>
                 <div class="upload-header">
@@ -315,11 +318,7 @@
             <p class="subtitle">Search results for: <span class="subtitle bold"></span></p>
             <img class="loader-page" src="images/loader-100.svg" alt="Loading" />
             <p class="nothing-found-message">No item found</p>
-            <div class="grid search-grid">
-              <a href="breed-page" class="grid-cell dislikes-card breed-card" data-link>
-                <span class="breed-name">Breed Name</span>
-              </a>
-            </div>
+            <div class="grid search-grid"></div>
         </div>
         <!-- Likes page -->
         <div class="likes-page">

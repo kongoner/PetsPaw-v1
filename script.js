@@ -349,7 +349,7 @@ function goToBreedInfoPage(params) {
 // Upload modal window
 const uploadWindowWrapper = document.querySelector('.upload-wrapper');
 const toUploadButton = document.querySelector('.btn-upload');
-const closeButtonUpload = document.querySelector('.btn-close');
+const closeButtonUpload = document.querySelector('.btn-close.close-popup');
 
 function goToUploadWindow() {
     uploadWindowWrapper.style.display = 'flex';
@@ -370,13 +370,27 @@ votingPageCard.addEventListener('click', () => {
     goToVotingPage();
     fetchRandomCat();
     getUserLogs();
-    });
-breedsPageCard.addEventListener('click', goToBreedsPage);
+
+    if (window.innerWidth <= 834) {
+      contentLeft.style.display = 'none';
+    }
+});
+breedsPageCard.addEventListener('click', () => {
+    goToBreedsPage();
+
+    if (window.innerWidth <= 834) {
+      contentLeft.style.display = 'none';
+    }
+});
 galleryPageCard.addEventListener('click', () => {
     goToGalleryPage();
     currentPageGal = 0; // Reset current page to 0
     getGalleryImages();
-    });
+
+    if (window.innerWidth <= 834) {
+      contentLeft.style.display = 'none';
+    }
+});
 
 // Toolbar links functionality
 likesPageLink.addEventListener('click', () => {
@@ -1127,6 +1141,7 @@ async function showSearchResults(grid) {
 /////////////////////////////////////////////////////////////////////////////////
 
 ////////// Upload functionality
+
 const inputFile = document.getElementById('input-file');
 const uploadArea = document.querySelector('.upload-area');
 const uploadAreaText = uploadArea.querySelector('p');
@@ -1243,6 +1258,17 @@ function updateImagesForTheme(theme) {
     hero.src = 'images/girl-and-pet@2x.webp';
   }
 }
+
+/////////////////////////////////////////////////////////////////////////////////
+
+// Responsive functions
+
+// Home state
+const btnMenu = document.querySelector('.btn-home');
+
+btnMenu.addEventListener('click', () => {
+    goToHomePage();
+})
 
 /////////////////////////////////////////////////////////////////////////////////
 
