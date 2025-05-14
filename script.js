@@ -138,6 +138,13 @@ function goToVotingPage() {
             page.style.display = 'none';
         }
     });
+
+    if (window.innerWidth <= 834) {
+      contentLeft.style.display = 'none';
+    }
+
+    fetchRandomCat();
+    getUserLogs();
 }
 
 // Breeds page
@@ -173,6 +180,10 @@ function goToBreedsPage() {
             page.style.display = 'none';
         }
     });
+
+    if (window.innerWidth <= 834) {
+      contentLeft.style.display = 'none';
+    }
 }
 
 // Gallery page
@@ -201,6 +212,10 @@ function goToGalleryPage() {
             page.style.display = 'none';
         }
     });
+
+    if (window.innerWidth <= 834) {
+      contentLeft.style.display = 'none';
+    }
 
     initializeBreedDropdownGal();
 }
@@ -231,6 +246,10 @@ function goToSearchPage() {
             page.style.display = 'none';
         }
     });
+
+    if (window.innerWidth <= 834) {
+      contentLeft.style.display = 'none';
+    }
 }
 
 // Likes page
@@ -256,6 +275,12 @@ function goToLikesPage() {
             page.style.display = 'none';
         }
     });
+
+    if (window.innerWidth <= 834) {
+      contentLeft.style.display = 'none';
+    }
+
+    getLikes();
 }
 
 // Favourites page
@@ -281,6 +306,12 @@ function goToFavouritesPage() {
             page.style.display = 'none';
         }
     });
+
+    if (window.innerWidth <= 834) {
+      contentLeft.style.display = 'none';
+    }
+
+    getFavourites();
 }
 
 // Dislikes page
@@ -306,6 +337,12 @@ function goToDislikesPage() {
             page.style.display = 'none';
         }
     });
+
+    if (window.innerWidth <= 834) {
+      contentLeft.style.display = 'none';
+    }
+
+    getDislikes();
 }
 
 // Breed info page
@@ -343,6 +380,10 @@ function goToBreedInfoPage(params) {
         }
     });
 
+    if (window.innerWidth <= 834) {
+      contentLeft.style.display = 'none';
+    }
+
     loadBreedInfoPage(breedId);
 }
 
@@ -362,54 +403,6 @@ toUploadButton.addEventListener('click', () => {
 closeButtonUpload.addEventListener('click', () => {
     uploadWindowWrapper.style.display = 'none';
 })
-
-/////////////////////////////////////////////////////////////////////////////////
-
-// Main navigation cards functionality
-votingPageCard.addEventListener('click', () => {
-    goToVotingPage();
-    fetchRandomCat();
-    getUserLogs();
-
-    if (window.innerWidth <= 834) {
-      contentLeft.style.display = 'none';
-    }
-});
-breedsPageCard.addEventListener('click', () => {
-    goToBreedsPage();
-
-    if (window.innerWidth <= 834) {
-      contentLeft.style.display = 'none';
-    }
-});
-galleryPageCard.addEventListener('click', () => {
-    goToGalleryPage();
-    currentPageGal = 0; // Reset current page to 0
-    getGalleryImages();
-
-    if (window.innerWidth <= 834) {
-      contentLeft.style.display = 'none';
-    }
-});
-
-// Toolbar links functionality
-likesPageLink.addEventListener('click', () => {
-    goToLikesPage();
-    getLikes();
-    // getUserLogs(); // Not working. Back to this later
-});
-
-favouritesPageLink.addEventListener('click', () => {
-    goToFavouritesPage();
-    getFavourites();
-    // getUserLogs(); // Not working. Back to this later
-});
-
-dislikesPageLink.addEventListener('click', () => {
-    goToDislikesPage();
-    getDislikes();
-    // getUserLogs(); // Not working. Back to this later
-});
 
 /////////////////////////////////////////////////////////////////////////////////
 
@@ -441,12 +434,12 @@ async function fetchRandomCat() {
             }
         });
         const data = await response.json();
+
+        // Adding current image
         currentImageToVote = data[0];
         const candidateCat = document.createElement('img');
         candidateCat.classList.add('candidate-image');
         candidateCat.src = currentImageToVote.url;
-
-        // Adding current image
         voteImageWrapper.prepend(candidateCat);
 
     } catch (error) {
@@ -1020,6 +1013,8 @@ async function getGalleryImages() {
     }
 
 }
+
+getGalleryImages();
 
 // Initialize Breed Dropdown
 const breedDropdownGal = document.getElementById('breed-gal');
